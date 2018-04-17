@@ -4,9 +4,11 @@ Get lost of measurements for predictive classification
 Arguments:  data = array, the actual data
             preds = array, the predicted classifications
             window_size = Int, window to apply to the predictions
-Returns:    accuracy, tp_rate, tn_rate, precision, npv, fn_rate, fp_rate, fdr, fo_rate
+Returns:    accuracy, tp_rate, tn_rate, precision, npv, fn_rate, fp_rate, fd_rate, fo_rate
 """
 function getBinaryClassificationMeasures(data, preds, window_size=0)
+  num_spikes = sum(data)
+  num_predicted = sum(preds)
   spike_inds = find(data .== 1)
   pred_inds = find(preds .== 1)
   all_indices = collect(1:length(data))
@@ -22,7 +24,7 @@ function getBinaryClassificationMeasures(data, preds, window_size=0)
   npv = num_true_negatives/(num_true_negatives + num_false_negatives) # negative predictive value
   fn_rate = num_false_negatives/(num_false_negatives + num_true_positives) # aka miss rate
   fp_rate = num_false_positives/(num_false_positives + num_true_negatives) # aka fall-out
-  fdr = num_false_positives/(num_false_positives + num_true_positives) # false discovery rate
+  fd_rate = num_false_positives/(num_false_positives + num_true_positives) # false discovery rate
   fo_rate = num_false_negatives/(num_false_negatives + num_true_negatives) # false omission rate
-  return accuracy, tp_rate, tn_rate, precision, npv, fn_rate, fp_rate, fdr, fo_rate
+  return num_spikes, num_predicted, accuracy, tp_rate, tn_rate, precision, npv, fn_rate, fp_rate, fd_rate, fo_rate
 end
